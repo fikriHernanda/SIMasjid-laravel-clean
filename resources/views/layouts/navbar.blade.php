@@ -121,7 +121,24 @@
             <li id='aset-link'><a class="nav-link not-ready" href="#"><i class="fas fa-warehouse"></i><span>Aset</span></a></li>
             <li id='keuangan-link'><a class="nav-link not-ready" href="#"><i class="fas fa-money-bill-wave"></i><span>Keuangan</span></a></li>
             <li id='musyawarah-link'><a class="nav-link not-ready" href="#"><i class="fas fa-comments"></i><span>Musyawarah</span></a></li>
-            <li id='kurban-link'><a class="nav-link not-ready" href="#"><i class="icofont-cow"></i><span>Kurban</span></a></li>
+            <li id='link-drop-aset' class="nav-item dropdown">
+              <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="icofont-cow icofont-2x"></i><span>Kurban</span></a>
+              <ul class="dropdown-menu">
+
+              <li id='link-master-aset'><a class="nav-link" href="{{route('manajPanitia')}}"><i class="icofont-group"></i>Daftar Panitia</a></li>
+              
+              <li><a class="nav-link" href="">Pekerjaan</a></li>
+              <li><a class="nav-link" href="">Penerima Kurban </a></li>
+              <li><a class="nav-link" href="">Persiapan</a></li>
+              <li><a class="nav-link" href="{{route('manajKurban')}}"><img src="{{URL::asset('/public/dist/navbarkurban/cow-silhouette.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 5px">Katalog Hewan</a></li>
+              <li><a class="nav-link" href="">Keuangan</a></li>
+              <li><a class="nav-link" href="{{route('manajPekurban')}}"><img src="{{URL::asset('/public/dist/navbarkurban/shopping-list.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 5px">Pendaftaran</a></li>
+              <li><a class="nav-link" href="#">Pemotongan</a></li>
+              <li><a class="nav-link" href="#">Distribusi</a></li>
+              </ul>
+            </li>
+            
+
         </aside>
       </div>
       <script>

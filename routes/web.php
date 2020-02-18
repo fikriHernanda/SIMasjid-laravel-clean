@@ -20,6 +20,23 @@ Route::middleware('auth')->group(function () {
 
     //route home
     Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/panitia','panitiaController@index')->name('manajPanitia');
+    Route::patch('/panitia/tambah','panitiaController@store')->name('tambahPanitia');
+    Route::post('/panitia/hapus','panitiaController@destroy')->name('hapusPanitia');      
+    Route::patch('/panitia/ubah','panitiaController@update')->name('editPanitia');    
+    //katalog
+    Route::get('/katalog_kurban','katalogKurbanController@index')->name('manajKurban');
+    Route::post('/katalog_kurban/tambah','katalogKurbanController@store')->name('tambahKurban');
+    Route::get('/katalog_kurban/detail/{id}', 'katalogKurbanController@getDetail')->name('kurbanDetail');
+    Route::get('/katalogKurban/{kurban}/edit','katalogKurbanController@edit');
+    Route::patch('/katalogKurban/{kurban}/update','katalogKurbanController@update');
+    Route::delete('/katalogKurban/{kurban}/','katalogKurbanController@destroy');
+    //pekurban
+    Route::get('/pekurban','pekurbanController@index')->name('manajPekurban');
+    Route::patch('/pekurban/tambah','pekurbanController@store')->name('tambahPekurban');
+    Route::patch('/pekurban/detail','pekurbanController@getDetail')->name('pekurbanDetail');
+    Route::GET('/pekurban/{pekurban}/edit','pekurbanController@edit')->name('editPekurban');
+    Route::patch('/pekurban/{pekurban}/update','pekurbanController@update')->name('updatePekurban');
     // group untuk anggota aktif
     Route::middleware('CheckStatus')->group(function () {
         //route keanggotaan
@@ -44,4 +61,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/pengaturan_akun', 'Pengaturan_Akun\PengaturanAkunController@index')->name('pengaturanAkun');
         Route::post('/pengaturan_akun/update', 'Pengaturan_Akun\PengaturanAkunController@update')->name('pengaturanAkunUpdate');
     });
+    
+
 });

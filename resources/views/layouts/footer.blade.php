@@ -23,8 +23,9 @@
 <!-- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> -->
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-<!-- <script src="{{ asset('public/dist/cleave.js/dist/cleave.min.js') }}"></script> -->
-<!-- <script src="{{ asset('public/dist/cleave.js/dist/addons/cleave-phone.us.js') }}"></script> -->
+<script src="{{ asset('public/dist/cleave.js/dist/cleave.min.js') }}"></script> 
+<script src="{{ asset('public/dist/cleave.js/dist/cleave.js') }}"></script> 
+<script src="{{ asset('public/dist/cleave.js/dist/addons/cleave-phone.us.js') }}"></script> 
 <script src="{{ asset('public/dist/jquery-pwstrength/jquery.pwstrength.min.js') }}"></script>
 <script src="{{ asset('public/dist/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <!-- <script src="{{ asset('public/dist/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script> -->
@@ -33,7 +34,7 @@
 <script src="{{ asset('public/dist/select2/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('public/dist/selectric/public/jquery.selectric.min.js') }}"></script>
 <script src="{{ asset('public/dist/summernote/dist/summernote-bs4.js') }}"></script>
-
+<script src="{{ asset('public/dist/assets/js/forms-advanced-forms.js') }}"></script> 
 <!-- Template JS File -->
 <script src="{{ asset('public/dist/assets/js/scripts.js') }}"></script>
 <!-- <script src="{{ asset('public/dist/assets/js/custom.js') }}"></script> -->
