@@ -4,14 +4,26 @@ namespace App\Http\Controllers;
 use App\pekurban;
 use App\kurban;
 use App\status_kurban;
-use App\Anggota_Jabatan;
-use App\Anggota_Status;
+use App\bagian_kurban;
 use Auth;
 use App\Anggota;
 use Illuminate\Http\Request;
 
 class pekurbanController extends Controller
 {
+
+    public function getDetail($id)
+    {
+        $pekurban = pekurban::get()->where('id', $id)->first();
+        $pekurban->status = $pekurban->status_kurban->status;
+        $pekurban->permintaan = $pekurban->bagian_kurban->bagian;
+        $pekurban->jenis = $pekurban->kurban->jenis_kurban->jenis;
+        $pekurban->kelas = $pekurban->kurban->kelas_kurban->kelas;
+        $pekurban->tanggalPendaftaran = date('d-m-Y', strtotime($pekurban->created_at));
+
+    
+        return $pekurban;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -22,10 +34,12 @@ class pekurbanController extends Controller
         $anggota = Auth::user();
         $pekurban = pekurban::get();
         $kurban = kurban::get();
+        $bagian = bagian_kurban::orderBy('jenis_kurban_id', 'desc')->get();
         $data=[
             'anggota'  => $anggota,
             'kurban'=>$kurban,
-            'list' =>$pekurban,
+            'bagian'=>$bagian,
+            'list' =>$pekurban
         ];
         return view('kurban/pekurban')->with($data);
 
@@ -49,19 +63,23 @@ class pekurbanController extends Controller
      */
     public function store(Request $request)
     {
-        $harga=$request->paramHarga;
-        
-        // $paramHarga2 = str_replace(',', '', $harga);
+        date_default_timezone_set('Asia/Jakarta');
+        $date=date_create();
         // $paramHarga3 = str_replace('.', '', $paramHarga2);
         // $paramHarga4=trim($paramHarga3,"");
+        $harga=$request->paramHarga;
         $kurbanPilihan = kurban::where('harga', $harga)->first();
-       
+        
+
+      
         pekurban::create([
             'nama'=>$request->namaPekurban,
             'alamat'=>$request->alamat,
             'no_hp'=>$request->noHp,
             'kurban_id'=>$kurbanPilihan->id,
             'status_kurban_id'=> 1,
+            'bagian_kurban_id'=>$request->bagianKurban,
+            'created_at'=>$date
             
 
         ]);
@@ -108,6 +126,10 @@ class pekurbanController extends Controller
      */
     public function update(Request $request, pekurban $pekurban)
     {
+        $request->validate([
+            'namaPekurban' => 'required',
+            'alamat' => 'required',
+        ]);
                                                                                                                                                                                                                                                                                      
         $harga=$request->paramHarga;
         $kurbanPilihan = kurban::where('harga', $harga)->first();
@@ -128,9 +150,10 @@ class pekurbanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        pekurban::destroy($pekurban->id_delete);
+        return redirect()->route('manajPekurban')->with('status', 'Pekurban Kurban Berhasil Dihapus');
     }
     /**
      * Remove the specified resource from storage.

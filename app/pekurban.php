@@ -17,5 +17,8 @@ class pekurban extends Model
     public function status_kurban(){
         return $this->belongsTo(status_kurban::Class);
     }
+    public function bagian_kurban(){
+        return $this->belongsTo(bagian_kurban::Class);
+    }
 }
 

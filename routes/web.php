@@ -21,6 +21,7 @@ Route::middleware('auth')->group(function () {
     //route home
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/panitia','panitiaController@index')->name('manajPanitia');
+    Route::get('/panitia/detail/{panitia}','panitiaController@getDetail')->name('panitiaDetail');
     Route::patch('/panitia/tambah','panitiaController@store')->name('tambahPanitia');
     Route::post('/panitia/hapus','panitiaController@destroy')->name('hapusPanitia');      
     Route::patch('/panitia/ubah','panitiaController@update')->name('editPanitia');    
@@ -30,13 +31,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/katalog_kurban/detail/{id}', 'katalogKurbanController@getDetail')->name('kurbanDetail');
     Route::get('/katalogKurban/{kurban}/edit','katalogKurbanController@edit');
     Route::patch('/katalogKurban/{kurban}/update','katalogKurbanController@update');
-    Route::delete('/katalogKurban/{kurban}/','katalogKurbanController@destroy');
+    Route::delete('/katalogKurban/delete','katalogKurbanController@destroy');
     //pekurban
     Route::get('/pekurban','pekurbanController@index')->name('manajPekurban');
     Route::patch('/pekurban/tambah','pekurbanController@store')->name('tambahPekurban');
-    Route::patch('/pekurban/detail','pekurbanController@getDetail')->name('pekurbanDetail');
+    Route::get('/pekurban/detail/{id}','pekurbanController@getDetail')->name('pekurbanDetail');
     Route::GET('/pekurban/{pekurban}/edit','pekurbanController@edit')->name('editPekurban');
     Route::patch('/pekurban/{pekurban}/update','pekurbanController@update')->name('updatePekurban');
+    Route::delete('/pekurban/delete','pekurbanController@destroy')->name('hapus_pekurban');
+    //prediksi
+    Route::get('/prediksi','prediksiController@index')->name('manajPrediksi');
+    Route::post('/prediksi/tambah','prediksiController@store')->name('tambahPrediksi');
+    
+
+
+
     // group untuk anggota aktif
     Route::middleware('CheckStatus')->group(function () {
         //route keanggotaan

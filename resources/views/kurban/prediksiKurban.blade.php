@@ -16,19 +16,19 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
         <div class="row">
             <ol class="breadcrumb float-sm-left" style="margin-bottom: 10px; margin-left: 15px;">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fas fa-mosque"></i> Home</a></li>
-                <li class="breadcrumb-item active">Kepanitiaan</li>
+                <li class="breadcrumb-item active">Prediksi Kantong Kurban</li>
             </ol>
         </div>
         <div class="section-header">
             <div class="row" style="margin:auto;">
                 <div class="col-12">
-                    <h1><i class="fa fa-address-book"></i> Daftar Panitia</h1>
+                    <h1><i class="fa fa-address-book"></i> Daftar Prediksi</h1>
                     <div></div>
                 </div>
             </div>
         </div>
         <div class="section-body">
-            <button class="btn btn-primary mt-3"  data-toggle="modal" id="togglemodal" data-target="#modalTambah">Tambah Panitia</button>
+            <button class="btn btn-primary mt-3"  data-toggle="modal" id="togglemodal" data-target="#modalTambah">Tambah Prediksi</button>
             <div class="row">
                 <button style="margin: 1em auto;" class="btn btn-dark" data-toggle="collapse" data-target="#filter-box">
                     <i class="fa fa-filter"></i> Show/Close Filter Data
@@ -53,35 +53,37 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                         </ul>
                     </div>
                     @endif
+                  
                     <table id="table_id" class="table table-striped table-bordered" style="padding-bottom:20px;">
                         <thead>
                             <tr>
                                 <th class="dt-center">No</th>
-                                <th class="dt-center">Nama</th>
-                                <th class="dt-center">Nomor Seluler</th>
-                                <th class="dt-center">Posisi</th>
+                                <th class="dt-center">Total Berat Daging Kurban</th>
+                                <th class="dt-center">Jumlah Kantong Akan dibagikan</th>
+                                <th class="dt-center">Berat Per kantong</th>
+                                <th class="dt-center">Tanggal Prediksi</th>
                                 <th class="dt-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            
-                            @foreach ($anggotaPanitia as $panitia)
+                                @if(isset($prediksi))
+                                @foreach ($prediksi as $item)
                             <tr>
-                                <td class="dt-center">{{ $loop->iteration }}</td>
-                                <td>{{ $panitia->anggota->nama }}</td>
-                                <td>{{ $panitia->anggota->telp }}</td>
-                                <td>{{ $panitia->posisi }}</td>
+                                <td class="dt-center">{{$loop->iteration}}</td>
+                                <td>{{$item->jumlah_berat}} Kg</td>
+                                <td>{{$item->jumlah_kantong}} Kantong</td>
+                                <td>{{$item->berat_perkantong}} Gram</td>
+                                <td>{{ date('d-m-Y', strtotime($item->created_at))}}</td>
                                 <td class="dt-center">
                                     <div class="btn-group mb-3" role="group" aria-label="Basic example" style="padding-left: 20px;">
-                                        <a href="#" class="open-detail btn btn-icon btn-sm btn-info" data-toggle="modal" data-id="{{ $panitia->id }}" data-target="#detailModal"><i class="fas fa-id-badge"></i> Detail</a>
-                                        @if($inside_sekretaris)
-                                        <a href="#" class="open-edit btn btn-icon btn-sm btn-primary" data-toggle="modal" data-id="{{ $panitia->id }}" data-target="#editModal"><i class="fas fa-sync"></i></i> Perbarui</a>
-                                        <a href="#" class="open-delete btn btn-icon btn-sm btn-danger" data-toggle="modal" data-id="{{ $panitia->id }}" data-target="#deleteModal"><i class="fas fa-trash"></i> Hapus</a> 
-                                        @endif
+                                        <a href="#" class="open-detail btn btn-icon btn-sm btn-info" data-toggle="modal" data-id="" data-target="#detailModal"><i class="fas fa-id-badge"></i> Detail</a>
+                                        <a href="#" class="open-edit btn btn-icon btn-sm btn-primary" data-toggle="modal" data-id="" data-target="#editModal"><i class="fas fa-sync"></i></i> Perbarui</a>
+                                        <a href="#" class="open-delete btn btn-icon btn-sm btn-danger" data-toggle="modal" data-id="" data-target="#deleteModal"><i class="fas fa-trash"></i> Hapus</a> 
                                     </div>
-                                </td>
+                                </td>    
                             </tr>
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -94,51 +96,52 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Menambahkan Panitia Kurban</h5>
+              <h5 class="modal-title">Menambahkan Prediksi</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-            <form method="POST" action="{{route('tambahPanitia')}}">
-                            @method('patch')
+            <h6>Total Jumlah Pekurban Saat ini</h6>
+            <form method="POST" action="{{route('tambahPrediksi')}}">
                             @csrf  
+                        @foreach ($jumlahPekurban as $item)
+                        <div class="form-group" >
+                        <label> Jumlah Pekurban {{$item->jenis}} Kategori {{$item->kelas}}</label>
+                        <input type="text" class="form-control" value=" {{$item->jumlahPekurban}} Orang" disabled>
+                        </div>
+                        @endforeach
                         <div class="form-group">
-                                <label>Nama Panitia</label>
-                                <select name="idAnggota"  class="form-control select2" style="margin-bottom:10px; width:100%;">
-                                    @foreach ($belumPanitia as $takmir)
-                                    <?php                                   
-                                    if(in_array($takmir->id, $idnyaAnggota)){
-                                        continue;
-                                    }
-                                    ?>
-                                <option value="{{$takmir->id}}">{{$takmir->nama}}</option>
-                                    @endforeach
-                                </select>
+                        <label>Total daging kurban (Kilogram)</label>                          
+                        <input id="totalBerat" type="text" class="form-control" value="{{$TotalBerat}}" disabled>
+                        <input  type="hidden" class="form-control" value="{{$TotalBerat}}" name="totalBerat" >
                         </div>
                         <div class="form-group">
-                                <label>Posisi</label>                          
-                                <select name="idJabatan" class="form-control " style="margin-bottom:10px; width:100%;"> 
-                                        <?php
-                                        if($adaketuapanitia) {?>
-                                <option value="2">Sekretaris Panitia</option>
-                                <option value="3" >Peralatan</option>
-                                <option value="4">Humas</option>  
-                                
-                                        <?php }else{ ?>
-                                <option  value="1" >Ketua Panitia</option>
-                                <option value="2">Sekretaris Panitia</option> 
-                                <option value="3" >Peralatan</option>
-                                <option value="4">Humas</option>  
-                                    <?php
-                                     }      
-                                        ?>          
-                                </select>
+                                <label>Jumlah berat per kantong</label>
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                      Gram
+                                    </div>
+                                  </div>
+                                  <input id="beratPerKantong" type="text" class="form-control @error('berat_kantong') is-invalid @enderror" name="berat_kantong" >
+                                  @error('berat_kantong')
+                                  <div class="invalid-feedback">     
+                                          {{$message}}
+                                  </div>  
+                                  @enderror 
+                                </div>
+                        </div>
+                        <button type="button" class="btn btn-info" onclick="hitungPrediksi()">Hitung</button>
+                        <div class="form-group mt-3">
+                                <label>Jumlah Kantong Yang akan dibagikan</label>
+                                  <input id="hasil"type="text" class="form-control" name="" disabled >
+                                  <input id="hasil2" type="hidden" class="form-control" name="hasilKantong" >
                         </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
                 </form>
             </div>
@@ -247,21 +250,18 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                                 <td>
                                         <select id="Editposisi" name="idJabatan" class="form-control" style="margin-bottom:10px; width:100%;"> 
                                             
-                                                <?php 
-                                                if($adaketuapanitia) {?>
+                                               
                                                 
                                                     <option  value="2">Sekretaris Panitia</option> 
                                                     <option value="3" >Peralatan</option>
                                                     <option  value="4">Humas</option>  
-                                                <?php }else{ ?>
+                                             
                                                     <option value="1" >Ketua Panitia</option>
                                                     <option value="2">Sekretaris Panitia</option> 
                                                     <option value="3" >Peralatan</option>
                                                     <option value="4">Humas</option>  
                                          
-                                            <?php
-                                             }      
-                                                ?>      
+                                                
                                 </td>
                             </tr>
                             <tr>
@@ -319,38 +319,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                 info: "Menampilkan halaman _PAGE_ dari _PAGES_",
             },
             //kriteria column 0 nama tipe input
-            initComplete: function() {
-                this.api().columns([1]).every(function() {
-                    var column = this;
-                    var input = $('<input class="form-control select" placeholder="Nama..." style="margin-bottom:10px;"></input>')
-                        .appendTo($(".column-search"))
-                        .on('keyup change clear', function() {
-                            if (column.search() !== this.value) {
-                                column
-                                    .search(this.value)
-                                    .draw();
-                            }
-                        });
-                });
-                //kriteria column 0 nama tipe select
-                this.api().columns([3]).every(function() {
-                    var column = this;
-                    var select = $('<select class="form-control select" style="margin-bottom:10px;"><option value="">Posisi...</option></select>')
-                        // .appendTo($(column.header()).empty())
-                        .appendTo($(".column-search"))
-                        .on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
-                    column.data().unique().sort().each(function(d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
-                });
-            }
+            
         });
     });
 
@@ -434,30 +403,21 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
             status_colorized()
         });
     });
-    $(document).ready(function() {
-        //ganti ukuran show entries
-        $('#menu_index').addClass('active');
-        $(".custom-select").css('width', '82px');
-        status_colorized()
-    });
+</script>
+<script>
+ function hitungPrediksi(){
+          var inputan = document.getElementById("beratPerKantong").value;
+           var inputanTotalBerat= document.getElementById("totalBerat").value; 
 
-    function status_colorized() {
-        //status aktif bold
-        $(".font-status").css('font-weight', 'bold');
-        /* ganti warna sesuai status */
-        //status aktif ubah warna hijau
-        $(".font-status").filter(function() {
-            return $(this).text() === 'Aktif';
-        }).css('color', 'green');
-        //status non-aktif ubah warna merah
-        $(".font-status").filter(function() {
-            return $(this).text() === 'Non-Aktif';
-        }).css('color', 'red');
-        //status belum verifikasi ubah warna abu2
-        $(".font-status").filter(function() {
-            return $(this).text() === 'Belum Verifikasi';
-        }).css('color', '#dbcb18');
-    }
+          var hasil = (inputanTotalBerat*1000)/inputan;
+          document.getElementById("hasil").value = Math.ceil(hasil);
+          document.getElementById("hasil2").value = Math.ceil(hasil);
+        //   document.getElementById("outputharga2").value =selectedValue.replace(/,/g, '');; 
+          
+       
+        
+        }
+    
 </script>
 
 

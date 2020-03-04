@@ -16,6 +16,9 @@ class jenis_kurban extends Model
     public function kurban(){
         return $this->hasOne(kurban::class);
     }
+    public function jenis_kurban(){
+        return $this->hasOne(bagian_kurban::class);
+    }
 
 
 }

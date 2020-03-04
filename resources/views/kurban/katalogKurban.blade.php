@@ -28,7 +28,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
             </div>
         </div>
         <div class="section-body">
-            <button class="btn btn-primary mt-3"  data-toggle="modal" id="togglemodal" data-target="#modalTambah">Tambah Kurban</button>
+            {{-- <button class="btn btn-primary mt-3"  data-toggle="modal" id="togglemodal" data-target="#modalTambah">Tambah Kurban</button> --}}
             <div class="row">
                 <button style="margin: 1em auto;" class="btn btn-dark" data-toggle="collapse" data-target="#filter-box">
                     <i class="fa fa-filter"></i> Show/Close Filter Data
@@ -60,13 +60,17 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                                 <th class="dt-center">Jenis</th>
                                 <th class="dt-center">Kelas</th>
                                 <th class="dt-center">Harga</th>
-                                <th class="dt-center">berat</th>
+                                <th class="dt-center">Berat</th>
                                 <th class="dt-center">Keterangan</th>
                                 <th class="dt-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                           
+                          
+                            @if(isset($list))
                             @foreach ($list as $kurban)
+                           
                             <tr>
                                 <td class="dt-center">{{ $loop->iteration }}</td>
                                 <td>{{ $kurban->jenis_kurban->jenis}}</td>
@@ -79,12 +83,14 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                                         <a href="#" class="open-detail btn btn-icon btn-sm btn-info" data-toggle="modal" data-id="{{ $kurban->id }}" data-target="#detailModal"><i class="fas fa-id-badge"></i> Detail</a>
                                        
                                         <a href="katalogKurban/{{$kurban->id}}/edit" class="open-edit btn btn-icon btn-sm btn-primary" ><i class="fas fa-sync"></i></i> Perbarui</a>
-                                        <a href="#" class="open-delete btn btn-icon btn-sm btn-danger" data-toggle="modal" data-id="{{ $kurban->id }}" data-target="#deleteModal"><i class="fas fa-trash"></i> Hapus</a> 
-                                    
+                                        {{-- <a href="#" class="open-delete btn btn-icon btn-sm btn-danger" data-toggle="modal" data-id="{{ $kurban->id }}" data-target="#deleteModal"><i class="fas fa-trash"></i> Hapus</a> 
+                                     --}}
                                     </div>
                                 </td>
                             </tr>
+                            
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -221,7 +227,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
             <h5 id="pesan" align="center"></h5>
             </div>
             <div class="modal-footer bg-whitesmoke br">
-                <form action="katalogKurban/{{$kurban->id}}" method="post">
+                <form action="katalogKurban/delete" method="post">
                     @csrf
                    @method('delete')
                     <input type="text" id="id_delete" name="id" value="" hidden />
@@ -241,7 +247,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
             $scroll_table = true;
         }
         var coba = document.getElementById('table_id1');
-        console.log(coba);
+
         $('#table_id1').DataTable({
             scrollX: $scroll_table,
             pageLength: 25,

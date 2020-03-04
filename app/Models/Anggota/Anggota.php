@@ -25,6 +25,10 @@ class Anggota extends Authenticatable
         $this->notify(new PasswordReset($token));
     }
 
+    public function panitia(){
+        return $this->hasOne(panitia::class);
+    }
+
 
 
 }

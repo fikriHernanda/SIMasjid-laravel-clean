@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Anggota\Anggota;
+use App\panitia;
 use Auth;
 use App\Http\Controllers\Controller;
 
@@ -27,18 +28,37 @@ class panitiaController extends Controller
     //CONSTANT VALUES FOR PANITIA
     public const KETUA_PANITIA = 1;
     public const SEKRETARIS_PANITIA = 2;
+    public const PERALATAN = 3;
+    public const HUMAS = 4;
 
-    public function getPosisi(Anggota $anggota)
+    public function getPosisi(Panitia $panitia)
     {
-        switch ($anggota->id_panitia) {
+        switch ($panitia->panitia_id) {
             case (self::KETUA_PANITIA):
                 return 'Ketua Panitia';
                 break;
             case (self::SEKRETARIS_PANITIA):
                 return 'Sekretaris Panitia';
                 break;
+            case (self::PERALATAN):
+                return 'Peralatan';
+                break;
+            case (self::HUMAS):
+                return 'Humas';
+                break;
           
         }
+    }
+      public function getDetail(Panitia $panitia)
+    {
+        $panitia = panitia::get()->where('id', $panitia->id)->first();
+        $panitia->nama = $panitia->anggota->nama;
+         
+        $panitia->telp = $panitia->anggota->telp;
+
+        
+    
+        return $panitia;
     }
     /**
      * Display a listing of the resource.
@@ -47,23 +67,29 @@ class panitiaController extends Controller
      */
     public function index()
     {
-        $anggotaPanitia = Anggota::get()->where('id_panitia', '!=', self::BUKAN_PANITIA);
-        $belumPanitia = Anggota::get()->where('id_panitia', '==', 0);
+        $anggotaPanitia = panitia::get();
+        $belumPanitia = anggota::get();
         $adaketuapanitia = false;
-        if(Anggota::where('id_panitia','=',1)->count()>0){
+        if(panitia::where('panitia_id','=',1)->count()>0){
             $adaketuapanitia =true;
         }
 
-        //tambahkan keterangan status dan jabatan dalam string
-        foreach ($anggotaPanitia as $anggota) {
-            $anggota->posisi =  $this->getPosisi($anggota);
+        // {{-- kumpulan id anggota yang sudah jadi panitia --}}
+        $idnyaAnggota = array();
+        foreach ($anggotaPanitia as $panitia){
+           $idnyaAnggota[] = $panitia->anggota_id; 
+        }
+ //tambahkan keterangan status dan jabatan dalam string
+        foreach ($anggotaPanitia as $panitia) {
+            $panitia->posisi =  $this->getPosisi($panitia);
         }
 
 
         $data = [
             'anggotaPanitia' => $anggotaPanitia,
-            'belumPanitia'   => $belumPanitia,
-            'adaketuapanitia'=> $adaketuapanitia
+            'belumPanitia' =>$belumPanitia,
+            'adaketuapanitia'=> $adaketuapanitia,
+            'idnyaAnggota'=>$idnyaAnggota
             
         ];
         //retval
@@ -89,9 +115,9 @@ class panitiaController extends Controller
     public function store(Request $request)
     {
         
-        Anggota::where('id', $request->anggota)
-        ->update([
-            'id_panitia' => $request->idJabatan,
+        panitia::create([
+            'anggota_id' => $request->idAnggota,
+            'panitia_id'=> $request ->idJabatan
             ]);
             return redirect()->route('manajPanitia')->with('status','Panitia berhasil ditambahkan');
     }
@@ -127,11 +153,11 @@ class panitiaController extends Controller
      */
     public function update(Request $request)
     {
-        Anggota::where('id', $request->id)
+        panitia::where('id', $request->id)
         ->update([
-            'id_panitia' => $request->idJabatan,
+            'panitia_id' => $request->idJabatan,
             ]);
-            return redirect()->route('manajPanitia')->with('status','Panitia berhasil dihapus');
+            return redirect()->route('manajPanitia')->with('status','Panitia berhasil diubah');
         
         
     }
@@ -144,10 +170,7 @@ class panitiaController extends Controller
      */
     public function destroy(Request $request)
     {
-        Anggota::where('id', $request->id)
-        ->update([
-            'id_panitia' => 0,
-            ]);
-            return redirect()->route('manajPanitia')->with('status','Panitia berhasil dihapus');
+        panitia::destroy($request->id);
+        return redirect()->route('manajPanitia')->with('status','Panitia berhasil dihapus');
     }
 }

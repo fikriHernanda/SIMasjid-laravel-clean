@@ -137,9 +137,9 @@ class katalogKurbanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(kurban $kurban)
+    public function destroy(Request $request)
     {
-        kurban::destroy($kurban->id);
+        kurban::destroy($request->id_delete);
         return redirect()->route('manajKurban')->with('status', 'Hewan Kurban Berhasil Dihapus');
     }
 }

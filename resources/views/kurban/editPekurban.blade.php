@@ -25,7 +25,12 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                             @csrf  
                         <div class="form-group">
                                 <label>Nama Pekurban</label>
-                        <input type="text" class="form-control" name="namaPekurban" value="{{$pekurban->nama}}">
+                        <input type="text" class="form-control @error('namaPekurban') is-invalid @enderror" name="namaPekurban" value="{{$pekurban->nama}}">
+                        @error('namaPekurban')
+                        <div class="invalid-feedback">     
+                                {{$message}}
+                        </div>  
+                        @enderror 
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
