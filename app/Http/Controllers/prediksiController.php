@@ -23,16 +23,24 @@ class prediksiController extends Controller
          ->join('kelas_kurban','kurban.kelas_kurban_id','=','kelas_kurban.id')
          ->join('jenis_kurban','kurban.jenis_kurban_id','=','jenis_kurban.id')
          ->select((DB::raw('kelas_kurban.kelas,jenis_kurban.jenis, count(pekurban.id) as jumlahPekurban')))
-         ->groupBy('kurban_id')
+         ->whereNull('patungan_kurban')->groupBy('kurban_id')
          ->get();
 
+        $jumlahKloterPatungan = DB::table('pekurban')
+        ->join('kurban', 'pekurban.kurban_id', '=', 'kurban.id')
+        ->join('kelas_kurban','kurban.kelas_kurban_id','=','kelas_kurban.id')
+        ->join('jenis_kurban','kurban.jenis_kurban_id','=','jenis_kurban.id')->select((DB::raw('count(pekurban.id) as jumlahPekurban')))
+        ->whereNotNull('patungan_kurban')->groupBy('kurban_id')
+        ->get();  
 
-         $pekurbankambing_A = pekurban::where('kurban_id',1)->count();
-         $pekurbankambing_B = pekurban::where('kurban_id',2)->count();
-         $pekurbankambing_C = pekurban::where('kurban_id',3)->count();
-         $pekurbanSapi_A = pekurban::where('kurban_id',4)->count();
-         $pekurbanSapi_B = pekurban::where('kurban_id',5)->count();
-         $pekurbanSapi_C = pekurban::where('kurban_id',6)->count();
+         $pekurbankambing_A = pekurban::where('kurban_id',1)->whereNull('patungan_kurban')->count();
+         $pekurbankambing_B = pekurban::where('kurban_id',2)->whereNull('patungan_kurban')->count();
+         $pekurbankambing_C = pekurban::where('kurban_id',3)->whereNull('patungan_kurban')->count();
+         $pekurbanSapi_A = pekurban::where('kurban_id',4)->whereNull('patungan_kurban')->count();
+         $pekurbanSapi_B = pekurban::where('kurban_id',5)->whereNull('patungan_kurban')->count();
+         $pekurbanSapi_C = pekurban::where('kurban_id',6)->whereNull('patungan_kurban')->count();
+         $pekurban_patungan = pekurban::whereNotNull('patungan_kurban')->count();
+
 
          $beratPerkurban = array();
          
@@ -61,6 +69,9 @@ class prediksiController extends Controller
                 $beratKurban[3] = $pekurbanSapi_A * (int) $sapi_A->berat;
                 $beratKurban[4] = $pekurbanSapi_B* (int) $sapi_B->berat;
                 $beratKurban[5] = $pekurbanSapi_C* (int) $sapi_C->berat;
+                $beratKurban[6] = floor($pekurban_patungan/7)* (int) $sapi_B->berat;
+
+
                 $TotalBerat = 0;
               
             foreach($beratKurban as $item){
@@ -72,7 +83,8 @@ class prediksiController extends Controller
          $data = [
             'TotalBerat'=>$TotalBerat,
             'jumlahPekurban'=> $jumlahPekurban,
-            'prediksi'=>$prediksi
+            'prediksi'=>$prediksi,
+            'jumlahKloterPatungan'=>$jumlahKloterPatungan
         ];
         
         //retval

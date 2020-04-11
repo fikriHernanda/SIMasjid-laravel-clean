@@ -8,6 +8,7 @@ use App\bagian_kurban;
 use Auth;
 use App\Anggota;
 use Illuminate\Http\Request;
+use PDF;
 
 class pekurbanController extends Controller
 {
@@ -20,8 +21,9 @@ class pekurbanController extends Controller
         $pekurban->jenis = $pekurban->kurban->jenis_kurban->jenis;
         $pekurban->kelas = $pekurban->kurban->kelas_kurban->kelas;
         $pekurban->tanggalPendaftaran = date('d-m-Y', strtotime($pekurban->created_at));
+        $pekurban->hargaAktual = $pekurban->harga_aktual;
 
-    
+        
         return $pekurban;
     }
     /**
@@ -32,7 +34,7 @@ class pekurbanController extends Controller
     public function index()
     {
         $anggota = Auth::user();
-        $pekurban = pekurban::get();
+        $pekurban = pekurban::whereNull('patungan_kurban')->get();
         $kurban = kurban::get();
         $bagian = bagian_kurban::orderBy('jenis_kurban_id', 'desc')->get();
         $data=[
@@ -126,22 +128,39 @@ class pekurbanController extends Controller
      */
     public function update(Request $request, pekurban $pekurban)
     {
+        date_default_timezone_set('Asia/Jakarta');
+        $date=date_create();
         $request->validate([
             'namaPekurban' => 'required',
             'alamat' => 'required',
-        ]);
-                                                                                                                                                                                                                                                                                     
-        $harga=$request->paramHarga;
-        $kurbanPilihan = kurban::where('harga', $harga)->first();
+        ]);                                                                                                                                                                                                                                                         
+        $harga=$request->jenis;
+        $harga2 = str_replace(',', '', $harga);
+      
+       $hargaAktual =str_replace(',', '', $request->hargaAktual);
+       
+        $kurbanPilihan = kurban::where('harga', $harga2)->first();
+            
         pekurban::where('id', $pekurban->id)
         ->update([
             'nama' => $request->namaPekurban,
             'alamat'=> $request->alamat,
             'no_hp'=>$request->noHp,
             'kurban_id'=>$kurbanPilihan->id,
-            'status_kurban_id'=>$request->status
+            'status_kurban_id'=>$request->status,
+            'harga_aktual'=>$hargaAktual,
+            'updated_at'=> $date
             ]);
-            return redirect()->route('manajPekurban');
+            $ispatungan = false;
+        $pekurban = pekurban::find($pekurban->id);
+        if($pekurban->patungan_kurban != 0){
+            $ispatungan = true;
+        }
+        if($ispatungan == false){
+            return redirect()->route('manajPekurban')->with('status', ' Data Pekurban  Berhasil Diubah');
+        }else{
+            return redirect()->route('manajUrunan')->with('status', ' Data Pekurban  Berhasil Diubah');
+        }   
     }
 
     /**
@@ -152,8 +171,18 @@ class pekurbanController extends Controller
      */
     public function destroy(Request $request)
     {
-        pekurban::destroy($pekurban->id_delete);
-        return redirect()->route('manajPekurban')->with('status', 'Pekurban Kurban Berhasil Dihapus');
+        $ispatungan = false;
+        $pekurban = pekurban::find($request->id);
+        if($pekurban->patungan_kurban != 0){
+            $ispatungan = true;
+        }
+        pekurban::destroy($request->id);
+        if($ispatungan == false){
+            return redirect()->route('manajPekurban')->with('status', 'Pekurban Kurban Berhasil Dihapus');
+        }else{
+            return redirect()->route('manajUrunan')->with('status', 'Pekurban Kurban Berhasil Dihapus');
+        }   
+            
     }
     /**
      * Remove the specified resource from storage.
@@ -172,4 +201,96 @@ class pekurbanController extends Controller
         ];
         return view('kurban/progress')->with($data);
     }
+     public function exportPDF($id){
+        $pekurban = pekurban::where('id', $id)->first();
+        if($pekurban->patungan_kurban != null ){
+            $pekurban->patungan= 'true';
+        }
+        $pdf = PDF::loadView('kurban.exportpdf',['pekurban'=>$pekurban]);
+        return $pdf->download('Bukti_pendaftaran_'.$pekurban->nama.'.pdf');
+     }
+
+    //  public function exportPDFPatungan($id){
+    //     $pekurban = pekurban::where('id', $id)->first();
+      
+    //     $pdf = PDF::loadView('kurban.exportpdf',['pekurban'=>$pekurban]);
+    //     return $pdf->download('Bukti_pendaftaran_'.$pekurban->nama.'.pdf');
+    //  }
+
+     public function lihatUrunan(){
+        
+        $pekurban_patungan = pekurban::whereNotNull('patungan_kurban')->get();
+        $bagian = bagian_kurban::orderBy('jenis_kurban_id', 'desc')->get();
+        $kurban = kurban::where('id','>', 3 )->get();
+        $data=[
+            'list' =>$pekurban_patungan,
+            'bagian'=>$bagian,
+            'kurban'=>$kurban
+        ];
+        return view('kurban/patunganPekurban')->with($data);
+     }
+     public function tambahUrunan(Request $request){
+        
+        date_default_timezone_set('Asia/Jakarta');
+        $date=date_create();
+        $harga=$request->paramHarga;
+        $kurbanPilihan = kurban::where('harga', $harga)->first();
+      
+        $cek_jumlah = pekurban::where('patungan_kurban',1)->count();
+        if($cek_jumlah==0){
+            $cek_jumlah +=1;
+        }elseif($cek_jumlah % 7 == 0){
+            $cek_jumlah+=1;
+        }
+        $kloter = $cek_jumlah / 7 ;
+        
+
+        // $paramHarga3 = str_replace('.', '', $paramHarga2);
+        // $paramHarga4=trim($paramHarga3,"");
+        
+        for ($i = 0; $i < count($request->namaPekurban); $i++) {
+            $data[] = [
+                'nama' =>$request->namaPekurban[$i],
+                'alamat' => $request->alamat[$i],
+                'no_hp' => $request->noHp[$i],
+                'kurban_id'=>$kurbanPilihan->id,
+                'status_kurban_id'=> 3,
+                'created_at'=>$date,
+                'bagian_kurban'=>$request->bagianKurban[i],
+                'patungan_kurban'=>ceil($kloter)
+            ];
+        }
+        pekurban::insert($data);
+
+
+        // foreach($request as $requests ){
+           
+        // pekurban::create([
+        //     'nama'=>$requests->namaPekurban[$loop],
+        //     'alamat'=>$requests->alamat[$loop],
+        //     'no_hp'=>$request->noHp[$loop],
+        //     'kurban_id'=>$kurbanPilihan->id,
+        //     'status_kurban_id'=> 3,
+        //     // 'bagian_kurban_id'=>$request->bagianKurban,
+        //     'created_at'=>$date,
+        //     'patungan_kurban'=>ceil($kloter)
+
+        // ]);
+        
+        // }
+        return redirect('/pekurban/urunan');
+        }
+        
+        public function getDetailPatungan($id)
+        {
+            $pekurban = pekurban::get()->where('id', $id)->first();
+            $pekurban->status = $pekurban->status_kurban->status;
+            $pekurban->permintaan = $pekurban->bagian_kurban->bagian;
+            $pekurban->jenis = $pekurban->kurban->jenis_kurban->jenis;
+            $pekurban->kelas = $pekurban->kurban->kelas_kurban->kelas;
+            $pekurban->tanggalPendaftaran = date('d-m-Y', strtotime($pekurban->created_at));
+    
+        
+            return $pekurban;
+        }
 }

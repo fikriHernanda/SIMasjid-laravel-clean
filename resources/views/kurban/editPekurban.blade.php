@@ -68,7 +68,17 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                                 </div>
                               </div>
                               <input id="outputharga"  type="text" class="form-control"  disabled>
-                              <input id="outputharga2"  type="hidden" class="form-control currency" name="paramHarga">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Harga Aktual</label>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                  Rp
+                                </div>
+                              </div>
+                            <input value="{{$pekurban->harga_aktual}}" name="hargaAktual" id="outputhargaAktual"  type="text" class="form-control currency">
                             </div>
                         </div>
                         <div class="form-group">

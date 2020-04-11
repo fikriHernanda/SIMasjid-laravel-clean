@@ -39,13 +39,26 @@ Route::middleware('auth')->group(function () {
     Route::GET('/pekurban/{pekurban}/edit','pekurbanController@edit')->name('editPekurban');
     Route::patch('/pekurban/{pekurban}/update','pekurbanController@update')->name('updatePekurban');
     Route::delete('/pekurban/delete','pekurbanController@destroy')->name('hapus_pekurban');
-    //prediksi
+    Route::get('/pekurban/exportpdf/{id}','pekurbanController@exportPDF')->name('cetakPekurban');
+    //urunan
+    Route::get('/pekurban/urunan','pekurbanController@lihatUrunan')->name('manajUrunan');
+    Route::post('/pekurban/TambahUrunan','pekurbanController@tambahUrunan')->name('tambahPatunganPekurban');
+
+   //prediksi
     Route::get('/prediksi','prediksiController@index')->name('manajPrediksi');
-    Route::post('/prediksi/tambah','prediksiController@store')->name('tambahPrediksi');
-    
-
-
-
+    Route::get('/penerima','penerimaKurbanController@index')->name('manajPenerimaKurban');
+    Route::post('/penerima/tambah','penerimaKurbanController@store')->name('tambahPenerima');
+    Route::get('/penerima/detail/{id}','penerimaKurbanController@getDetail');
+    Route::post('/penerima/delete','penerimaKurbanController@destroy');
+    Route::get('/penerima/{id}/edit','penerimaKurbanController@edit');
+    Route::patch('/penerima/{id}/update','penerimaKurbanController@update');
+    //penyembelih
+    Route::get('/penyembelih','penyembelihController@index')->name('manajPenyembelih');
+    Route::post('/penyembelih/tambah','penyembelihController@store')->name('tambahPenyembelih');
+    Route::get('/penyembelih/detail/{id}','penyembelihController@getDetail');
+    Route::post('penyembelih/delete','penyembelihController@destroy');
+    Route::get('/penyembelih/{id}/edit','penyembelihController@edit');
+    Route::patch('/penyembelih/{id}/update','penyembelihController@update');
     // group untuk anggota aktif
     Route::middleware('CheckStatus')->group(function () {
         //route keanggotaan

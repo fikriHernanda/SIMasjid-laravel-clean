@@ -129,9 +129,9 @@
               <li><a class="nav-link" href="{{route('manajPrediksi')}}"><img src="{{URL::asset('/public/dist/navbarkurban/food-scale-tool.png')}}" alt="profile Pic" height="15px" width="15px" style="margin: 0px 30px 0px 0px">Prediksi</a></li>
               <li><a class="nav-link" href="{{route('manajKurban')}}"><img src="{{URL::asset('/public/dist/navbarkurban/cow-silhouette.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 30px 0px 0px">Katalog Hewan</a></li>
               <li><a class="nav-link" href=""><img src="{{URL::asset('/public/dist/navbarkurban/work.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 30px 0px 0px">Pekerjaan</a></li>
-              <li><a class="nav-link" href=""><img src="{{URL::asset('/public/dist/navbarkurban/network.png')}}" alt="profile Pic" height="20px" width="15px" style="margin:0px 30px 0px 0px">Penerima Kurban </a></li>
-              <li><a class="nav-link" href=""><img src="{{URL::asset('/public/dist/navbarkurban/people.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 30px 0px 0px">Tenaga Penyembelih</a></li>
-             <li><a class="nav-link" href="#"><img src="{{URL::asset('/public/dist/navbarkurban/support.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 30px 0px 0px">Peralatan</a></li>
+              <li><a class="nav-link" href="{{route('manajPenerimaKurban')}}"><img src="{{URL::asset('/public/dist/navbarkurban/network.png')}}" alt="profile Pic" height="20px" width="15px" style="margin:0px 30px 0px 0px">Penerima Kurban </a></li>
+              <li><a class="nav-link" href="{{route('manajPenyembelih')}}"><img src="{{URL::asset('/public/dist/navbarkurban/people.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 30px 0px 0px">Tenaga Penyembelih</a></li>
+              <li><a class="nav-link" href="#"><img src="{{URL::asset('/public/dist/navbarkurban/support.png')}}" alt="profile Pic" height="15px" width="15px" style="margin:0px 30px 0px 0px">Peralatan</a></li>
               <li><a class="nav-link" href="#">Distribusi</a></li>
               </ul>
             </li>

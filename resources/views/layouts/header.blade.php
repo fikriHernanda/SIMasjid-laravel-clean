@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="{{ asset('public/dist/selectric/public/selectric.css') }}">
   <link rel="stylesheet" href="{{ asset('public/dist/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
   <link rel="stylesheet" href="{{ asset('public/dist/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/dist/assets/css/multistep.css') }}">
 
   <link rel="stylesheet" href="{{ asset('public/dist/summernote/dist/summernote-bs4.css') }}">
 

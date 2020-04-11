@@ -16,20 +16,19 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
          <div class="row">
             <ol class="breadcrumb float-sm-left" style="margin-bottom: 10px; margin-left: 15px;">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fas fa-mosque"></i> Home</a></li>
-                <li class="breadcrumb-item active">Katalog Kurban</li>
+                <li class="breadcrumb-item active">Daftar Penerima Kurban</li>
             </ol>
         </div>
         <div class="section-header">
             <div class="row" style="margin:auto;">
                 <div class="col-12">
-                    <h1><i class="fa fa-address-book"></i> Daftar Pekurban Masjid Ibnu SIna</h1>
+                    <h1><i class="fa fa-address-book"></i> Daftar Penerima Kurban Masjid Ibnu Sina</h1>
                     <div></div>
                 </div>
             </div>
         </div>
         <div class="section-body">
-            <button class="btn btn-primary mt-3"  data-toggle="modal" id="togglemodal" data-target="#modalTambah">Tambah Pekurban</button>
-            <a  href="{{route('home')}}/pekurban/urunan" class="btn btn-info mt-3"  >Lihat Patungan Kurban</a>
+            <button class="btn btn-primary mt-3"  data-toggle="modal" id="togglemodal" data-target="#modalTambah">Tambah Penerima</button>
             <div class="row">
                 <button style="margin: 1em auto;" class="btn btn-dark" data-toggle="collapse" data-target="#filter-box">
                     <i class="fa fa-filter"></i> Show/Close Filter Data
@@ -59,30 +58,28 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                             <tr>
                                 <th class="dt-center">No</th>
                                 <th class="dt-center">Nama</th>
-                                <th class="dt-center">Nomor HP</th>
+                                <th class="dt-center">Narahubung</th>
                                 <th class="dt-center">Alamat</th>
-                                <th class="dt-center">Kurban</th>
-                                <th class="dt-center">Permintaan</th>
+                                <th class="dt-center">Jenis Penerima</th>
                                 <th class="dt-center">Status</th>
                                 <th class="dt-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if(isset($list))
-                            @foreach ($list as $pekurban)
+                            @foreach ($list as $penerima)
                             <tr>
                                 <td class="dt-center">{{ $loop->iteration }}</td>
-                                <td>{{ $pekurban->nama}}</td>
-                                <td>{{ $pekurban->no_hp }}</td>
-                                <td>{{ $pekurban->alamat }}</td>
-                            <td>{{$pekurban->kurban->jenis_kurban->jenis}} Kategori {{$pekurban->kurban->kelas_kurban->kelas}}</td>
-                                <td>{{$pekurban->bagian_kurban->bagian}}</td>
-                                <td class="font-status">{{$pekurban->status_kurban->status }}</td>
+                                <td>{{ $penerima->nama}}</td>
+                                <td>{{ $penerima->no_hp }}</td>
+                                <td>{{ $penerima->alamat }}</td>
+                                <td>{{$penerima->jenis}}</td>
+                                <td class="font-status">{{$penerima->status }}</td>
                                 <td class="dt-center">
                                     <div class="btn-group mb-3" role="group" aria-label="Basic example" style="padding-left: 20px;">
-                                        <a href="#" class="open-detail btn btn-icon btn-sm btn-info" data-toggle="modal" data-id="{{ $pekurban->id }}" data-target="#detailModal"><i class="fas fa-id-badge"></i> Detail</a>
-                                        <a href="pekurban/{{$pekurban->id}}/edit" class="open-edit btn btn-icon btn-sm btn-primary" ><i class="fas fa-sync"></i></i> Perbarui</a>
-                                        <a href="#" class="open-delete btn btn-icon btn-sm btn-danger" data-toggle="modal" data-id="{{ $pekurban->id }}" data-target="#deleteModal"><i class="fas fa-trash"></i> Hapus</a> 
+                                        <a href="#" class="open-detail btn btn-icon btn-sm btn-info" data-toggle="modal" data-id="{{ $penerima->id }}" data-target="#detailModal"><i class="fas fa-id-badge"></i> Detail</a>
+                                        <a href="penerima/{{$penerima->id}}/edit" class="open-edit btn btn-icon btn-sm btn-primary" ><i class="fas fa-sync"></i></i> Perbarui</a>
+                                        <a href="#" class="open-delete btn btn-icon btn-sm btn-danger" data-toggle="modal" data-id="{{ $penerima->id }}" data-target="#deleteModal"><i class="fas fa-trash"></i> Hapus</a> 
                                     </div>
                                 </td>
                             </tr>
@@ -106,12 +103,12 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
               </button>
             </div>
             <div class="modal-body">
-            <form method="POST" action="{{route('tambahPekurban')}}">
-                    @method('patch')
+            <form method="POST" action="{{route('tambahPenerima')}}">
+                   
                             @csrf  
                         <div class="form-group">
-                                <label>Nama Pekurban</label>
-                                <input type="text" class="form-control" name="namaPekurban">
+                                <label>Nama Penerima Kurban</label>
+                                <input type="text" class="form-control" name="nama">
                         </div>
                         <div class="form-group">
                                 <label>Alamat</label>
@@ -128,48 +125,21 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                                       <input type="text" class="form-control phone-number" name="noHp">
                                     </div>
                         </div>
-                        {{-- <div class="form-group">
-                            <div class="control-label">Patungan Sapi?</div>
-                            <label class="custom-switch mt-2">
-                              <input id="cekbox" type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                              <span class="custom-switch-indicator"></span>
-                              <span class="custom-switch-description">Ya</span>
-                            </label>
-                          </div> --}}
-                      
                         <div id="divsel" class="form-group">
-                                <label>Kurban</label>
-                                <select id="sel" class="form-control" name="jenis" onchange="getSelectValue()">
-                                
-                                @foreach ($kurban as $kurban)
-                                <option value="{{$kurban->harga}}">{{$kurban->jenis_kurban->jenis}} Kategori {{$kurban->kelas_kurban->kelas}}</option>
-                                @endforeach
+                                <label>Jenis Penerima</label>
+                                <select id="sel" class="form-control" name="jenis" >
+                                <option value="Perorangan">Perorangan</option>
+                                <option value="Lembaga/Yayasan">Lembaga/Yayasan </option>
                                 </select>  
-                        </div>
-                        <div id="divsel2" class="form-group">
-                                <label>Harga</label>
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                      Rp
-                                    </div>
-                                  </div>
-                                  <input id="outputharga"  type="text" class="form-control"  disabled>
-                                  <input id="outputharga2"  type="hidden" class="form-control " name="paramHarga">
-                                </div>
                         </div>
                         <div class="form-group">
-                                <label>Permintaan bagian</label>
-                                <select  class="form-control" name="bagianKurban" onchange="">     
-                                @foreach ($bagian as $bagian)
-                                <option value="{{$bagian->id}}">{{$bagian->bagian}} {{$bagian->jenis_kurban->jenis}}</option>
-                                @endforeach
-                                </select>  
+                                <label>Detail</label>
+                                <input type="text" class="form-control" name="keterangan" placeholder="contoh : mengasuh 250 orang">
                         </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
             </div>
@@ -208,18 +178,6 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                             <td id="detailTelp"></td>
                         </tr>
                         <tr>
-                            <th scope="row">Kurban</th>
-                            <td id="detailKurban"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Permintaan Bagian</th>
-                            <td id="detailPermintaan"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Harga Aktual</th>
-                            <td id="detailHargaAktual"></td>
-                        </tr>
-                        <tr>
                             <th scope="row">Tanggal Pendaftaran</th>
                             <td id="detailTGLPendaftaran"></td>
                         </tr>
@@ -228,7 +186,6 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
                 <!-- <input type="text" id="id" name="id" value="" hidden/> -->
             </div>
             <div  id="bottom-modal" class="modal-footer bg-whitesmoke br">
-                <a id="tblpdf" class="btn btn-info" href="">Unduh Bukti Pendaftaran</a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -240,7 +197,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Hapus Pekurban</h5>
+                <h5 class="modal-title">Hapus Data Penerima Kurban</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -251,7 +208,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
             <h5 id="pesan" align="center"></h5>
             </div>
             <div class="modal-footer bg-whitesmoke br">
-            <form action="{{route('home')}}/pekurban/delete" method="post">
+            <form action="{{route('home')}}/penerima/delete" method="post">
                     @csrf
                    @method('delete')
                     <input type="text" id="id_delete" name="id" value="" hidden />
@@ -339,36 +296,21 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
     });
   
 </script>
-{{-- <script>
-   $('#cekbox').on('change', function() {
-        var  cekbox = document.getElementById('cekbox');
-        var  sel = document.getElementById('divsel');
-        var  sel2 = document.getElementById('divsel2');
-       
-            if(cekbox.checked == true){
-                
-                sel.style.visibility = 'hidden';
-                sel2.style.visibility = 'hidden';
-            }else{
-                sel.style.visibility = 'visible';
-                sel2.style.visibility = 'visible';
-            }
-    });
-</script> --}}
+
 
 <script>
         $(document).on("click", ".open-delete", function() {
               /* passing data dari view button detail ke modal */
               var thisDataAnggota = $(this).data('id');
               $(".modal-footer #id_delete").val(thisDataAnggota);
-              var linkDetail = "{{ route('home') }}/pekurban/detail/" + thisDataAnggota;
+              var linkDetail = "{{ route('home') }}/penerima/detail/" + thisDataAnggota;
               
               console.log(linkDetail);
               $.get(linkDetail, function(data) {
                   //deklarasi var obj JSON data detail anggota
                   var obj = data;
                   // ganti elemen pada dokumen html dengan hasil data json dari jquery
-              document.getElementById("pesan").innerHTML = "Apakah Anda yakin ingin menghapus pekurban "+ obj.nama+'?';
+              document.getElementById("pesan").innerHTML = "Apakah Anda yakin ingin menghapus penerima kurban "+ obj.nama+'?';
                 
                   //base root project url + url dari db
                   // var link_foto = "{{ route('home') }}/" + obj.link_foto;
@@ -379,11 +321,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
         /* passing data dari view button detail ke modal */
         var thisDataAnggota = $(this).data('id');
         // $(".modal-body #id").val(thisDataAnggota);
-        var linkDetail = "{{ route('home') }}/pekurban/detail/" + thisDataAnggota;
-        var formatter = new Intl.NumberFormat('id', {
-            style: 'currency',
-            currency: 'IDR',
-                  });
+        var linkDetail = "{{ route('home') }}/penerima/detail/" + thisDataAnggota;
         $.get(linkDetail, function(data) {
             //deklarasi var obj JSON data detail anggota
             var obj = data;
@@ -392,25 +330,8 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
             $("#detailTelp").html(obj.no_hp);
             $("#detailStatus").html(obj.status);
             $("#detailAlamat").html(obj.alamat);
-            $("#detailKurban").html(obj.jenis +' Kategori '+ obj.kelas);
-            $("#detailPermintaan").html(obj.permintaan);
-            $("#detailTGLPendaftaran").html(obj.tanggalPendaftaran);
-            $("#detailHargaAktual").html(formatter.format(obj.hargaAktual));                      
-           // Create anchor element. 
-                 var a = document.getElementById('tblpdf');
-                  var linkPdf = "{{ route('home') }}/pekurban/exportpdf/"+thisDataAnggota;
-                  a.href = linkPdf;
+            $("#detailTGLPendaftaran").html(obj.tanggalPendaftaran);                  
                   status_colorized(); 
-              
-                    
-                  // Append the anchor element to the body. 
-                 
-
-            //base root project url + url dari db
-            // var link_foto = "{{ route('home') }}/" + obj.link_foto;
-            // $("#detailFoto").attr('src', link_foto);
-            // console.log(link_foto);
-
         });
     });
 
@@ -445,19 +366,6 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
         }
         getSelectValue();
     
-          //  document.getElementById("sel").addEventListener("click", munculHarga);
-          // var harga = document.getElementsByClassName('price');
-          // var tmp = document.getElementsByClassName('selected');
-         
-         
-          // function munculHarga() {
-          //   var idkurban = document.getElementsByClassName("selected").id;
-          //   for (i = 0; i < harga.length; i++) {
-          //   if(i==idkurban){
-             
-        //     } 
-        // }
-          //}
         </script>
         <script>
         function getBagian(){
@@ -472,7 +380,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
         /* ganti warna sesuai status */
         //status aktif ubah warna hijau
         $(".font-status").filter(function() {
-            return $(this).text() === 'terdaftar';
+            return $(this).text() === 'Terdaftar';
         }).css('color', 'green');
         //status non-aktif ubah warna merah
         $(".font-status").filter(function() {

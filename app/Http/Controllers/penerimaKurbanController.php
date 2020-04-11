@@ -1,20 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\penyembelih;
-
+use App\penerima_kurban;
 use Illuminate\Http\Request;
 
-class penyembelihController extends Controller
+class penerimaKurbanController extends Controller
 {
 
-
     public function getDetail($id){
-        $penyembelih = penyembelih::get()->where('id', $id)->first();
-        $penyembelih->tanggalterdaftar= date('d-m-Y', strtotime($penyembelih->created_at));
+        $penerima = penerima_kurban::get()->where('id', $id)->first();
+        $penerima->tanggalPendaftaran = date('d-m-Y', strtotime($penerima->created_at));
        
         
-        return $penyembelih;
+        return $penerima;
     }
     /**
      * Display a listing of the resource.
@@ -23,11 +21,12 @@ class penyembelihController extends Controller
      */
     public function index()
     {
-     $penyembelih = penyembelih::get();
+     
+        $penerima = penerima_kurban::get();
         $data=[
-         'list'=>$penyembelih
+           'list'=>$penerima
         ];
-        return view('kurban/penyembelih')->with($data);
+        return view('kurban/penerimaKurban')->with($data);
     }
 
     /**
@@ -57,16 +56,18 @@ class penyembelihController extends Controller
             'nama' => 'required',
             'alamat' => 'required',
         ]);   
-        penyembelih::create([
+        penerima_kurban::create([
             'nama'=>$request->nama,
             'alamat'=>$request->alamat,
-            'telp'=>$request->noHp,
-            'posisi'=>$request->posisi,
+            'no_hp'=>$request->noHp,
+            'jenis'=> $request->jenis,
+            'keterangan'=>$request->keterangan,
+            'status'=> "terdaftar",
             'created_at'=>$date
             
 
         ]);
-        return redirect()->route('manajPenyembelih');
+        return redirect()->route('manajPenerimaKurban');
     }
 
     /**
@@ -88,11 +89,11 @@ class penyembelihController extends Controller
      */
     public function edit($id)
     {
-        $penyembelih = penyembelih::find($id);
+        $penerima = penerima_kurban::find($id);
         $data=[
-            'penyembelih'=> $penyembelih,
+            'penerima'=> $penerima,
         ];
-        return view('kurban/editPenyembelih')->with($data);
+        return view('kurban/editPenerimaKurban')->with($data);
     }
 
     /**
@@ -108,15 +109,17 @@ class penyembelihController extends Controller
         $date=date_create();
         $nohp2 = str_replace(' ', '', $request->noHp);
 
-        penyembelih::where('id', $id)
+        penerima_kurban::where('id', $id)
         ->update([
             'nama' => $request->nama,
             'alamat'=>$request->alamat,
-            'telp'=>$nohp2,
-            'posisi'=>$request->posisi,
+            'no_hp'=>$nohp2,
+            'jenis'=> $request->jenis,
+            'keterangan'=>$request->keterangan,
+            'status'=> $request->status,
             'updated_at'=>$date
             ]);
-            return redirect()->route('manajPenyembelih')->with('status', 'Data Penyembelih Kurban Berhasil Diubah');
+            return redirect()->route('manajPenerimaKurban')->with('status', 'Penerima Kurban Berhasil Diubah');
     }
 
     /**
@@ -125,10 +128,8 @@ class penyembelihController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
-    {
-        penyembelih::destroy($request->id);
-     
-        return redirect()->route('manajPenyembelih')->with('status', 'Tenaga Penyembelih Kurban Berhasil Dihapus');
+    public function destroy($id)    {
+        penerima_kurban::destroy($request->id);
+            return redirect()->route('manajPekurban')->with('status', 'penerima Kurban Berhasil Dihapus');
     }
 }
