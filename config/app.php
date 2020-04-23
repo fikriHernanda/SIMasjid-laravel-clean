@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'lateral-linker-275016.df.r.appspot'),
 
     'asset_url' => env('ASSET_URL', null),
 

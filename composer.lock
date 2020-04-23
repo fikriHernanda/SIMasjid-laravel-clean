@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a38d528c12dc89640b2c3730cfdfdf05",
+    "content-hash": "0c33824cf460feb46aa952f855cf8cf3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -845,6 +845,7 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
@@ -891,7 +892,52 @@
                 }
             ],
             "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
+        },
+        {
+            "name": "kus/php-image",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kus/php-image.git",
+                "reference": "a8aeb5a514c0c8563f193679945cae41095634cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kus/php-image/zipball/a8aeb5a514c0c8563f193679945cae41095634cc",
+                "reference": "a8aeb5a514c0c8563f193679945cae41095634cc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/PHPImage.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Blake Kus",
+                    "email": "blakekus@gmail.com",
+                    "homepage": "http://www.blakek.us"
+                }
+            ],
+            "description": "Wrapper for PHP's GD Library for easy image manipulation",
+            "homepage": "http://blakek.us",
+            "keywords": [
+                "gd",
+                "image",
+                "php",
+                "text"
+            ],
+            "time": "2017-12-04T04:19:25+00:00"
         },
         {
             "name": "laravel/framework",
@@ -5563,11 +5609,14 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "kus/php-image": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3"
+        "php": "^7.1.3",
+        "ext-gd": "*"
     },
     "platform-dev": []
 }

@@ -111,7 +111,6 @@ class peralatanController extends Controller
             'id_satuan'=>$request->satuan,
             'keterangan'=>$request->keterangan,
             'id_status'=> "1",
-            'harga'=>;
             'created_at'=>$date
         ]);
         return redirect()->route('manajPeralatan');
