@@ -56,9 +56,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/penyembelih','penyembelihController@index')->name('manajPenyembelih');
     Route::post('/penyembelih/tambah','penyembelihController@store')->name('tambahPenyembelih');
     Route::get('/penyembelih/detail/{id}','penyembelihController@getDetail');
-    Route::post('penyembelih/delete','penyembelihController@destroy');
+    Route::post('/penyembelih/delete','penyembelihController@destroy');
     Route::get('/penyembelih/{id}/edit','penyembelihController@edit');
     Route::patch('/penyembelih/{id}/update','penyembelihController@update');
+    //pekerjaan
+    Route::get('/pekerjaan','pekerjaanController@index')->name('manajPekerjaan');
+    Route::post('/pekerjaan/tambah','pekerjaanController@store')->name('tambahPekerjaan');
+    Route::get('/pekerjaan/{id}/edit','pekerjaanController@edit');
+    Route::patch('/pekerjaan/{id}/update','pekerjaanController@update');
+    Route::get('/pekerjaan/detail/{id}','pekerjaanController@getDetail');
+    Route::post('/pekerjaan/delete','pekerjaanController@destroy');
+
+    //peralatan
+    Route::get('/peralatan','peralatanController@index')->name('manajPeralatan');
+    Route::post('/perlatan/tambah','peralatanController@store')->name('tambahPeralatan');
+    Route::get('/peralatan/{id}/edit','peralatanController@edit');
+    Route::patch('/peralatan/{id}/update','peralatanController@update');
+    Route::get('/peralatan/detail/{id}','peralatanController@getDetail');
+    Route::delete('/pekerjaan/delete','peralatanController@destroy');
     // group untuk anggota aktif
     Route::middleware('CheckStatus')->group(function () {
         //route keanggotaan

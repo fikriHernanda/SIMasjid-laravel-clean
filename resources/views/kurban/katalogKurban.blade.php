@@ -98,7 +98,7 @@ $inside_sekretaris = in_array($authUser->id_jabatan, $sekretaris);
         </div>
     </section>
 </div>
-{{-- modal TAMBAH --}}
+modal TAMBAH
 <div class="modal fade" tabindex="-1" role="dialog" id="modalTambah">
         <div class="modal-dialog" role="document">
           <div class="modal-content">

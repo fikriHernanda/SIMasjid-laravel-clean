@@ -130,6 +130,6 @@ class penerimaKurbanController extends Controller
      */
     public function destroy($id)    {
         penerima_kurban::destroy($request->id);
-            return redirect()->route('manajPekurban')->with('status', 'penerima Kurban Berhasil Dihapus');
+            return redirect()->route('manajPekurban')->with('status', 'Penerima Kurban Berhasil Dihapus');
     }
 }
